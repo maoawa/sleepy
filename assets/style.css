@@ -19,7 +19,7 @@ body, html {
 }
 
 body {
-    background: url('https://cn.bing.com/th?id=OHR.FraueninselChiemsee_ZH-CN3541482552_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp') no-repeat center center fixed;
+    background: url('https://api.maao.cc/paimon/') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;
