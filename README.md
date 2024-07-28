@@ -18,22 +18,24 @@ Let your friends know if you're sleeping or not.
 
 修改网页中的信息，使网页更符合自己的喜好。
 
-若希望实现网页中的邮件提醒按时睡觉的功能，需要配置`remind/mail.php`，在该文件中定义如下变量：
+若希望实现网页中的邮件提醒按时睡觉的功能，需要配置`remind/mail.php`，在该文件中给如下变量赋值：
 | 变量 | 内容 |
 | ---- | ---- |
 | stmp | SMTP服务器地址 |
 | port | SMTP服务器端口 |
 | mail | 发件邮箱地址(用户名) |
 | pwd | 发件邮箱密码 |
+| mailto | 收件邮箱地址 |
 
 示例：
 ```php
 $smtp = 'smtp.example.com'; //SMTP服务器地址
 $port = '587'; //SMTP服务器端口
-$mail = 'maomao@example.com'; //发件邮箱地址(用户名)
+$mail = 'mail@example.com'; //发件邮箱地址(用户名)
 $pwd = '12345678'; //发件邮箱密码
+$mailto = 'maomao@example.com' //收件邮箱地址
 ```
 建议不使用此功能时删除相关代码，以最大程度优化性能。
 
-此外，还需注意的是，根据Apache 2.0开源协议，您必须使用相同的许可证，并保留原始的版权声明：  
+此外，还需注意的是，根据Apache 2.0开源协议，您必须在修改后的版本中使用相同的许可证，并保留原始的版权声明：  
 `©2024 毛毛(maao.cc) All Rights Reserved.`
