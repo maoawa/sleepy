@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>睡似了吗？</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="card">
+        <a style="font-size: 2em;">睡<ruby>似<rt>sǐ</rt></ruby>了吗？</a>
+        
+        <div style="height: 20px;"></div>
+
+        <a>毛毛当前应该是：<br><a id="status" style="font-size: 1.2em;">正在更新...</a></a>    
+        <br>
+        <a id="additional-info" style="font-size: 1em;"></a>
+        
+        <hr>
+
+        <a>在任何情况下，电话都是最容易快速得到回答的通讯方式。<br>访问
+            <a href="https://maao.cc/" target="_blank" style="color: orange;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/>
+            </svg>常联系(maao.cc)
+        </a>页面，获取毛毛的联系信息。</a>
+
+        <hr>
+        
+        <a>填写以下信息并提交，可以提醒毛毛按时睡觉。</a>
+            <div style="position: relative; padding: 10px;">
+                <input placeholder="你的称呼" style="width: 100px;"> |
+                <input placeholder="附言 (如:该睡觉了!)" style="width: 320px;"> |
+                <button style="background-color: orange; width: 80px;">提交</button>
+                <div class="overlay" id="overlay">
+                    <p style="color: white;">目标作息时间：北京时间0:00-9:30</p>
+                </div>
+            </div>
+        <a>这或许可以帮助毛毛保持规律的作息。</a>
+
+        <hr>
+
+        <a>通过这个页面，你可以知晓毛毛当前的状态。
+            <br>
+            <a href="https://www.maodream.com/archives/192/" target="_blank" style="color: orange;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/>
+                </svg>
+                了解更多...
+            </a>
+        </a>
+    </div>
+    <script src="assets/query.js"></script>
+    <script src="assets/remind.js"></script>
+</body>
+</html>
