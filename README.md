@@ -14,9 +14,13 @@ Let your friends know if you're sleeping or not.
 <br><br>
 
 ## 配置指南 <p style="font-size: 70%;">建议了解实现原理后再进行配置。</a>
-在`assets/switch/secret.php`中，将自己的密钥赋值给变量`secret`，例如`$secret = '12345678';`。
+在`switch/secret.php`中，将自己的密钥赋值给变量`secret`，例如`$secret = '12345678';`。
 
 修改网页中的信息，使网页更符合自己的喜好。
+
+如果修改过服务器默认文档，请将`index.php`及`index.html`加入默认文档列表中。
+
+保存状态的文件位置默认为根目录下的`status.txt`。如果想要更改储存状态的文件位置，请修改`switch/index.php`文件中的第三行：`$status_file = 'path/to/file.dat';`。注意目录层级关系，同时请确保PHP有权限修改该文件。
 
 若希望实现网页中的邮件提醒按时睡觉的功能，需要配置`remind/mail.php`，在该文件中给如下变量赋值：
 | 变量 | 内容 |
@@ -39,3 +43,20 @@ $mailto = 'maomao@example.com' //收件邮箱地址
 
 此外，还需注意的是，根据Apache 2.0开源协议，您必须在修改后的版本中使用相同的许可证，并保留原始的版权声明：  
 `©2024 毛毛(maao.cc) All Rights Reserved.`
+
+## 更新状态
+配置完毕后，使用`GET`方式并带`secret`与`status`参数请求`switch/`接口即可更新状态。如果状态更新成功，将会返回`ok`。发生错误时，可能返回的信息如下：
+|返回内容|错误内容|可能的解决方式|
+|----|----|----|
+|`Invalid secret.`|无效密钥|请确保请求参数与`assets/switch/secret.php`中的密钥一致。参见“配置指南”。|
+|`Error writing to file.`|写入状态时发生错误|请确保PHP有足够权限修改储存状态的文件。|
+|`Bad request.`|请求参数错误|请检查请求方式与参数是否正确，见下文示例。|
+
+### 请求示例
+以`GET`方式请求`https://sleepy.example.com/switch/?secret=12345678&status=1`，返回`ok`，`status.txt`内容更新为`awake`。
+
+## 扩展：使用Siri发送请求
+许多朋友了解到这个项目都是通过毛毛在Bilibili上发布的视频([BV1fE421A7PE](https://www.bilibili.com/video/BV1fE421A7PE))。在视频中，我通过唤醒Siri并说出 *I'm going to sleep.* 和 *I'm up.* 来更新状态。这种更新方式的实现原理是通过让Siri执行对应的快捷指令，在快捷指令中向switch接口发送GET请求。
+
+在`快捷指令`App中新建一个快捷指令，设置一个名称，这个名称就是执行该快捷指令需要对Siri说的内容，例如`晚安`或`早上好`。在快捷指令中加入`获取URL内容`操作，在`URL`输入框中，输入合成后的更新请求URL，例如`https://sleepy.example.com/switch/?secret=12345678&status=0`，参见“更新状态”。
+![示例：更新状态为睡着](https://api.maao.cc/static/sleepy/readme/awake.jpg "示例：更新状态为睡着")![示例：更新状态为醒着](https://api.maao.cc/static/sleepy/readme/sleeping.jpg "示例：更新状态为醒着")
