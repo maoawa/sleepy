@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .device {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .device h2 {
+            margin: 0 0 10px;
+        }
+        .status {
+            font-weight: bold;
+            color: #333;
+        }
+        .entity-picture {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Device Status</h1>
+
+    <!-- Devices will be dynamically added here -->
+    <div id="devices-container"></div>
+
+    <script>
+        async function fetchDeviceStatus() {
+            try {
+                const response = await fetch("http://localhost/sleepy/home"); // Replace with your actual API URL
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                const devicesContainer = document.getElementById("devices-container");
+                devicesContainer.innerHTML = ""; // Clear previous content
+
+                // Iterate through each entity in the data
+                for (const [entityId, details] of Object.entries(data)) {
+                    const deviceDiv = document.createElement("div");
+                    deviceDiv.className = "device";
+
+                    // Add device name
+                    const deviceName = entityId.replace(/_/g, " ").replace(/\./g, " ").toUpperCase();
+                    const title = document.createElement("h2");
+                    title.textContent = deviceName;
+                    deviceDiv.appendChild(title);
+
+                    if (
+                        entityId === "media_player.mars_homepod_right" &&
+                        (!details["attributes.media_title"] || details["attributes.media_title"] === "")
+                    ) {
+                        // If HomePod is not playing, display "Not Playing"
+                        const notPlaying = document.createElement("p");
+                        notPlaying.innerHTML = `State: <span class="status">Not Playing</span>`;
+                        deviceDiv.appendChild(notPlaying);
+                    } else {
+                        // Add state
+                        const state = document.createElement("p");
+                        state.innerHTML = `State: <span class="status">${details.state || "Unknown"}</span>`;
+                        deviceDiv.appendChild(state);
+
+                        // Add attributes dynamically
+                        for (const [key, value] of Object.entries(details)) {
+                            if (key.startsWith("attributes.")) {
+                                const attributeName = key.replace("attributes.", "").replace(/_/g, " ");
+                                const attributeValue = value === null ? "Unknown" : value;
+
+                                // Special handling for "entity_picture"
+                                if (attributeName === "entity picture") {
+                                    const image = document.createElement("img");
+                                    image.src = attributeValue;
+                                    image.alt = "Entity Picture";
+                                    image.className = "entity-picture";
+                                    deviceDiv.appendChild(image);
+                                } else {
+                                    const attribute = document.createElement("p");
+                                    attribute.innerHTML = `${attributeName}: <span class="status">${attributeValue}</span>`;
+                                    deviceDiv.appendChild(attribute);
+                                }
+                            }
+                        }
+                    }
+
+                    devicesContainer.appendChild(deviceDiv);
+                }
+            } catch (error) {
+                console.error("Error fetching device status:", error);
+            }
+        }
+
+        // Call fetchDeviceStatus every second
+        fetchDeviceStatus();
+    </script>
+</body>
+</html>
