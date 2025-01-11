@@ -1,3 +1,4 @@
+<!--LOW PERFORMANCE. DISCONTINUED-->
 <?php
 $endpoint = 'https://home.example.com/api';
 $host = 'https://home.example.com';

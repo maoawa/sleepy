@@ -1,12 +1,16 @@
+<!--LOW PERFORMANCE. DISCONTINUED-->
 <?php
 include 'config.php';
 
 function getEntityData($entities) {
-    global $endpoint, $host, $token;
+    global $endpoint, $host, $token, $request_count; // 引入全局计数器
 
     $results = [];
     foreach ($entities as $entity_id => $fields) {
         $url = $endpoint . "/states/" . $entity_id;
+
+        // 每次请求计数器加1
+        $request_count++;
 
         $curl = curl_init();
         curl_setopt_array($curl, [
@@ -17,21 +21,29 @@ function getEntityData($entities) {
 
         $response = curl_exec($curl);
         if ($response === false) {
-            return ['server_status' => 0, 'error' => curl_error($curl)]; // 加入状态码 0 直接返回错误
+            return [
+                'server_status' => 0,
+                'error' => curl_error($curl),
+                'requests' => $request_count // 添加请求计数到错误输出
+            ];
         }
 
         curl_close($curl);
 
         $data = json_decode($response, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return ['server_status' => 0, 'error' => 'Invalid JSON response']; // 加入状态码 0 直接返回错误
+            return [
+                'server_status' => 0,
+                'error' => 'Invalid JSON response',
+                'requests' => $request_count // 添加请求计数到错误输出
+            ];
         }
 
         // 提取指定的字段
         $filteredData = [];
         foreach ($fields as $field) {
             if (strpos($field, '.') !== false) {
-                // 处理嵌套字段，包括 attributes 下的特定键
+                // 处理嵌套字段
                 $keys = explode('.', $field);
                 if ($keys[0] === 'attributes' && isset($data['attributes'])) {
                     $attributeKey = implode('.', array_slice($keys, 1));
@@ -45,7 +57,7 @@ function getEntityData($entities) {
                         $filteredData[$field] = $data['attributes'][$attributeKey] ?? null;
                     }
                 } else {
-                    // 处理一般的嵌套字段
+                    // 处理一般嵌套字段
                     $value = $data;
                     foreach ($keys as $key) {
                         if (isset($value[$key])) {
@@ -66,7 +78,11 @@ function getEntityData($entities) {
         $results[$entity_id] = $filteredData;
     }
 
-    return ['server_status' => 1, 'data' => $results]; // 加入成功状态码。完整数据被包装在 data 键里
+    return [
+        'server_status' => 1,
+        'requests' => $request_count, // 添加请求计数到成功输出
+        'data' => $results
+    ];
 }
 
 $entities = [
@@ -79,6 +95,8 @@ $entities = [
     "sensor.room_humidity" => ["state"],
     "weather.forecast_home" => ["state", "attributes.temperature", "attributes.humidity", "attributes.wind_speed"]
 ];
+
+$request_count = 0; // 初始化请求计数器
 
 header('Content-Type: application/json; charset=UTF-8');
 $result = getEntityData($entities);
