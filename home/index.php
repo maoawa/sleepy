@@ -17,17 +17,14 @@ function getEntityData($entities) {
 
         $response = curl_exec($curl);
         if ($response === false) {
-            $results[$entity_id] = ['error' => curl_error($curl)];
-            curl_close($curl);
-            continue;
+            return ['server_status' => 0, 'error' => curl_error($curl)]; // 加入状态码 0 直接返回错误
         }
 
         curl_close($curl);
 
         $data = json_decode($response, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $results[$entity_id] = ['error' => 'Invalid JSON response'];
-            continue;
+            return ['server_status' => 0, 'error' => 'Invalid JSON response']; // 加入状态码 0 直接返回错误
         }
 
         // 提取指定的字段
@@ -69,7 +66,7 @@ function getEntityData($entities) {
         $results[$entity_id] = $filteredData;
     }
 
-    return $results;
+    return ['server_status' => 1, 'data' => $results]; // 加入成功状态码。完整数据被包装在 data 键里
 }
 
 $entities = [

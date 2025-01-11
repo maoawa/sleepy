@@ -45,12 +45,18 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const data = await response.json();
+                const result = await response.json();
 
+                // Ensure data exists in the response
+                if (!result.data) {
+                    throw new Error("Missing 'data' field in the response");
+                }
+
+                const data = result.data; // Extract only the "data" field
                 const devicesContainer = document.getElementById("devices-container");
                 devicesContainer.innerHTML = ""; // Clear previous content
 
-                // Iterate through each entity in the data
+                // Iterate through each entity in the "data" field
                 for (const [entityId, details] of Object.entries(data)) {
                     const deviceDiv = document.createElement("div");
                     deviceDiv.className = "device";
@@ -61,11 +67,11 @@
                     title.textContent = deviceName;
                     deviceDiv.appendChild(title);
 
+                    // Special handling for HomePod not playing
                     if (
                         entityId === "media_player.mars_homepod_right" &&
                         (!details["attributes.media_title"] || details["attributes.media_title"] === "")
                     ) {
-                        // If HomePod is not playing, display "Not Playing"
                         const notPlaying = document.createElement("p");
                         notPlaying.innerHTML = `State: <span class="status">Not Playing</span>`;
                         deviceDiv.appendChild(notPlaying);
@@ -106,6 +112,7 @@
 
         // Call fetchDeviceStatus every second
         fetchDeviceStatus();
+        setInterval(fetchDeviceStatus, 5000); // Uncomment this line to enable periodic updates
     </script>
 </body>
 </html>
